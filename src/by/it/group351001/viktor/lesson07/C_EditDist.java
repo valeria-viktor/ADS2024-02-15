@@ -1,4 +1,4 @@
-package by.it.a_khmelev.lesson07;
+package by.it.group351001.viktor.lesson07;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -48,12 +48,68 @@ import java.util.Scanner;
 
 
 public class C_EditDist {
+    //метод возвращает 0, если символы совпадают, и 1, если не совпадают
+    int m(int i0, int j0, String s1, String s2) {
+        i0--;
+        j0--;
+        if (s1.charAt(i0) == s2.charAt(j0)) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+    //метод возвращает минимальное значение из трех чисел
+    int min(int n1, int n2, int n3) {
+        if (n1 > n2) {
+            n1 = n2;
+        }
+        if (n1 > n3) {
+            n1 = n3;
+        }
+        return n1;
+    }
 
     String getDistanceEdinting(String one, String two) {
         //!!!!!!!!!!!!!!!!!!!!!!!!!     НАЧАЛО ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
-
+        int n = one.length();  //длина первой строки
+        int m = two.length();  //длина второй строки
+        // Создаем массив для хранения результатов
+        int[][] matrix = new int[n + 1][m + 1];
+        //инициализация первой строки и столбца
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= m; j++) {
+                if ((i == 0) && (j == 0)) {
+                    matrix[i][j] = 0;
+                } else if (j == 0) {
+                    matrix[i][j] = i;
+                } else if (i == 0) {
+                    matrix[i][j] = j;
+                } else {
+                    matrix[i][j] = min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1, matrix[i - 1][j - 1] + m(i, j, one, two));
+                }
+            }
+        }
 
         String result = "";
+        int i = n, j = m;
+        while (i > 0 && j > 0) {   //начинаем с нижнего правого угла
+            if (one.charAt(i - 1) == two.charAt(j - 1)) {  //сли символы совпадают
+                result = "#" + "," + result;               //добавляем #
+                i--;
+                j--;
+            //если не совпадают, добавляются другие соответсвующие операции
+            } else if (matrix[i][j] == matrix[i - 1][j - 1] + 1) {
+                result = "~" + two.charAt(j - 1) + "," + result;
+                i--;
+                j--;
+            } else if (matrix[i][j] == matrix[i - 1][j] + 1) {
+                result = "-" + one.charAt(i - 1) + "," + result;
+                i--;
+            } else if (matrix[i][j] == matrix[i][j - 1] + 1) {
+                result = "+" + two.charAt(j - 1) + "," + result;
+                j--;
+            }
+        }
         //!!!!!!!!!!!!!!!!!!!!!!!!!     КОНЕЦ ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
         return result;
     }

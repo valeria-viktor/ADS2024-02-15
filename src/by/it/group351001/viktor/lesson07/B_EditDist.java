@@ -1,4 +1,4 @@
-package by.it.a_khmelev.lesson07;
+package by.it.group351001.viktor.lesson07;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -41,12 +41,39 @@ public class B_EditDist {
 
     int getDistanceEdinting(String one, String two) {
         //!!!!!!!!!!!!!!!!!!!!!!!!!     НАЧАЛО ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
+        int len1 = one.length();  //длина первой строки
+        int len2 = two.length();  //длина второй строки
 
+        // Создаем массив для хранения результатов
+        int[][] dp = new int[len1 + 1][len2 + 1];
 
-        int result = 0;
+        // Инициализируем первую строку и первый столбец
+        //в значения в первом столбце устанавливается i
+        for (int i = 0; i <= len1; i++) {
+            dp[i][0] = i;
+        }
+        //в значения в первой строке j
+        for (int j = 0; j <= len2; j++) {
+            dp[0][j] = j;
+        }
+
+        // Заполняем остальные ячейки таблицы
+        for (int i = 1; i <= len1; i++) {
+            for (int j = 1; j <= len2; j++) {
+                if (one.charAt(i - 1) == two.charAt(j - 1)) {
+                    // Символы совпадают, нет необходимости в операции редактирования
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    // Символы не совпадают, выбираем минимальную операцию из трех возможных
+                    dp[i][j] = 1 + Math.min(dp[i - 1][j - 1], Math.min(dp[i][j - 1], dp[i - 1][j]));
+                }
+            }
+        }
         //!!!!!!!!!!!!!!!!!!!!!!!!!     КОНЕЦ ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
-        return result;
+        // Возвращаем значение в нижней правой ячейке таблицы
+        return dp[len1][len2];
     }
+
 
 
     public static void main(String[] args) throws FileNotFoundException {
